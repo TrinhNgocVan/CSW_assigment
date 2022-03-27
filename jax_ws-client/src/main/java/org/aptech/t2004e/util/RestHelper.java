@@ -3,6 +3,8 @@ package org.aptech.t2004e.util;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
 import org.aptech.t2004e.config.ServiceProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -26,14 +28,14 @@ public class RestHelper {
 	/*
 	 * no need for exam
 	 */
-//	public ResponseEntity<?> send(String token, String path, HttpMethod method, Class<?> responseType, Object... uriVariables) {
-//		String url = serviceProperties.getApiUrl() + path;
-//		if (uriVariables != null && uriVariables.length > 0) {
-//			return restTemplate.exchange(url, method, buildHttpEntityWithToken(token), responseType, uriVariables);
-//		} else {
-//			return restTemplate.exchange(url, method, buildHttpEntityWithToken(token), responseType);
-//		}
-//	}
+	public ResponseEntity<?> send(String token, String path, HttpMethod method, Class<?> responseType, Object... uriVariables) {
+		String url = serviceProperties.getApiUrl() + path;
+		if (uriVariables != null && uriVariables.length > 0) {
+			return restTemplate.exchange(url, method, buildHttpEntityWithToken(token), responseType, uriVariables);
+		} else {
+			return restTemplate.exchange(url, method, buildHttpEntityWithToken(token), responseType);
+		}
+	}
 	
 	public ResponseEntity<?> send(String path, HttpMethod method, Class<?> responseType, Object... uriVariables) {
 		String url = serviceProperties.getApiUrl() + path;
@@ -99,4 +101,15 @@ public class RestHelper {
 
 	    return initHeaders;
 	}
+	private HttpEntity<?> buildHttpEntityWithToken(String token) {
+		HttpHeaders headers = initHeaders();
+		// harccode token
+		token  = "0969947342" ;
+
+		if (StringUtils.isNotBlank(token)) {
+			headers.add("Authorization", "Bearer " + token);
+		}
+		return new HttpEntity<>(headers);
+	}
+
 }
